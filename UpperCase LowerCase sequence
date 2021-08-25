@@ -1,0 +1,44 @@
+public class HelloWorld{
+
+     public static void main(String []args){
+        int[] re = problems.medium("ConHeoHHuc");
+        for (int r: re){
+            System.out.printf("%d",r);
+            System.out.print(" ");
+        }
+     }
+}
+class problems{
+    public static int[] medium(String s){
+        char[] caps = {'A','B','C','D','E','F','G','H','I','J','K','L','M','N','O','P','Q','R','S','T','U','V','W','X','Y','Z'};
+        int signc = 0;
+        int[] varsign = new int[s.length()];
+        int bothup = 0;
+        int bothlow = 0;
+        for (int i=0; i<s.length(); i++ ){
+           char c = s.charAt(i);
+           for (char n: caps){
+               signc = -1;
+               if (c == n){
+                   signc = 1;
+                   break;
+               }
+           }
+           varsign[i] = signc;
+        }
+        for (int i=0; i<varsign.length-1; i++){
+            int p = varsign[i];
+            int q = varsign[i+1];
+            if (p*q>0 && p+q>0){
+                bothup = bothup + 1;
+            }
+            if (p*q>0 && p+q<0){
+                bothlow = bothlow + 1;
+            }
+        }
+        int[] result = new int[2];
+        result[0] = bothlow;
+        result[1] = bothup;
+        return result;
+    }
+}
