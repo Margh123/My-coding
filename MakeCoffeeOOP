@@ -1,0 +1,204 @@
+public class MakeCoffee{
+public static void main(String[] args) {
+	CoffeeMachine ABC = CoffeeMachine.BuyMachine("InnOVA", true); // ABC is a Coffee Machine (chargeable X type)
+	CoffeeMachine.Coffee K = ABC.C.MakeCoffee(8, 0.73f, 0.25f, "LibericA", true); // K is a coffee created from ABC machine
+	K.Taste();
+	int i = ABC.X.powerstate;
+	System.out.println(i);
+	}
+}
+
+class CoffeeMachine{ //Generic type
+	protected CoffeeMachine(boolean chargeable, String brand, int i) {
+		this.chargeable = chargeable;
+		this.brand = brand;
+	}
+	protected CoffeeMachine(boolean chargeable, String brand) { // Define machine to use
+		if (chargeable == true) {
+			X = new Chargeable(true, brand);			
+		}
+		if (chargeable == false) {
+			Y = new Inchargeable(false, brand);
+		}
+	}
+	private CoffeeMachine(String brand, boolean chargeable) {
+		this(chargeable, brand);
+		this.brand = brand;
+		this.chargeable = chargeable;
+	}
+	Chargeable X;
+	Inchargeable Y;
+	private String brand; //Cantrell, DeTech, Innova
+	private boolean chargeable;
+	void GetMachineInfo(){
+		System.out.println("Current machine brand is:"+" "+ brand) ;
+		System.out.println("Chargeablility:"+" "+ chargeable) ;
+	}
+	Coffee C = new Coffee();; //Lets the user make coffee
+	static CoffeeMachine BuyMachine(String brand, boolean chargeable) { //Factory method for buying a new CoffeeMachine
+		String[] brandarr = {"Cantrell", "DeTech", "Innova"};
+		for (int i =0; i<3;) {
+			for (String a : brandarr) {
+				String A = a.toLowerCase();
+				if (brand.toLowerCase().equals(A)) {
+					return new CoffeeMachine(a,chargeable);//a is correct typing of brands in case the user misspell
+				}
+				continue;
+			}
+			System.out.println("Invalid input (No such brand)");
+			return null;
+		}
+		return null;
+	}
+	class Coffee{ //Coffee blueprint
+		private Coffee() {};
+		private boolean UsedNutrientFunc = false;
+		private boolean UsedTasteFunc = false;
+		private Coffee(int sugar, float water, float milk, String seeds, boolean alcoholic) {	
+			this.sugar = sugar;
+			this.water = water;
+			this.milk = milk;
+			this.seeds = seeds;
+			this.alcoholic = alcoholic;
+		}
+		private int sugar; //tsp
+		private float water; //liter
+		private float milk; //liter
+		private String seeds; //Liberica, Robusta, Arabica
+		private boolean alcoholic;
+		private float nutrient;
+		void GetCoffeeInfo() {
+			System.out.println("Sugar:"+" "+ sugar + "(tsp)") ;
+			System.out.println("Water:"+" "+ water + "(liter)");
+			System.out.println("Milk:"+" "+ milk + "(liter)");
+			System.out.println("Seed type:"+" "+ seeds);
+			System.out.println("Alcoholic:"+" "+ alcoholic);
+		}
+		void GetNutrientValue() {
+			if (UsedNutrientFunc == true) {	// Prevent the second call of GetNutrientValue() function.
+				System.out.println("You have already called the function");
+				return;
+			}
+			nutrient = CalculateNutri(sugar, water, milk, seeds, alcoholic); //nutrient is private so the user can't access it
+			if (chargeable == true) {
+				UsedNutrientFunc = true;
+				int save = X.powerstate;
+				X.powerstate = X.powerstate - 27;
+				if(X.powerstate < 0) {
+					X.powerstate = save;
+					System.out.println("The current power is not enough for the operation");
+					return;
+				}
+				System.out.println("Nutrient value of the coffee is"+" "+ nutrient);
+				return;
+			}
+			System.out.println("Nutrient value of the coffee is"+" "+ nutrient); // For inchargeable machine.
+			UsedNutrientFunc = true;
+		}
+		private float CalculateNutri(int sugar, float water, float milk, String seeds, boolean alcoholic) {
+			int AlcoholicU;
+			int SeedU = 0;
+			if (alcoholic == true) {
+				AlcoholicU = -4;
+			}
+			else {AlcoholicU = 0;}
+			switch(seeds) {
+			case "Liberica":
+				SeedU = 15;
+				break;
+			case "Robusta":
+				SeedU = 9;
+				break;
+			case "Arabica":
+				SeedU = -8;
+				break;
+		}
+			nutrient = 5*sugar + water*7/0.125f + milk*6/0.125f + AlcoholicU + SeedU;
+			return nutrient;
+		}
+		void Taste() {
+			if (UsedTasteFunc == true) {	// Prevent the second call of Taste() function.
+				System.out.println("You have already called the function");
+				return;
+			}
+			String s = "The coffee is Flavorsome";
+			UsedTasteFunc = true;
+			switch(seeds) { 
+			case "Liberica":
+				if (sugar>=4 && sugar<=6) {
+					System.out.println("The coffee is Decent");
+					return;
+				}
+				System.out.println(s);
+				return;
+			case "Robusta":
+				if (milk>=0.2 && milk<=0.5) {
+					System.out.println("The coffee is Musty");
+					return;
+				}
+				System.out.println(s);
+				return;
+			case "Arabica":
+				if (alcoholic == true) {
+					System.out.println("The coffee is Alkaline");
+					return;
+				}
+				System.out.println(s);
+				return;
+			default: System.out.println(s);
+			}
+		}
+		Coffee MakeCoffee(int sugar, float water, float milk, String seeds, boolean alcoholic) { // Factory method
+			if (sugar<0 || water<0 || milk<0) {
+				System.out.println("Invalid input (Negative quantity)");
+				return null;
+			}
+			if (!(sugar<15 && water<1 && milk<0.6)) {
+				System.out.println("Invalid input (Ingredient conditions)");
+				return null;
+			}
+			String[] seedsarr = {"Liberica", "Robusta", "Arabica"};
+			for (int i =0; i<3;) {
+				for (String a : seedsarr) {
+					String A = a.toLowerCase();
+					if (seeds.toLowerCase().equals(A)) {
+						Coffee result = new Coffee(sugar, water, milk, a, alcoholic);	//a is correct typing of seeds in case the user misspell
+						if (chargeable == true) {
+							int save = X.powerstate;
+							X.powerstate = X.powerstate - 35;
+							if(X.powerstate < 0) {
+								X.powerstate = save;
+								System.out.println("The current power is not enough for the operation");
+								return null;
+							}
+						}
+						return result;
+					}
+					continue;
+				}
+				System.out.println("Invalid input (No such seed type)");
+				return null;
+			}
+			return null;
+		}
+	}
+}
+class Chargeable extends CoffeeMachine{
+	protected Chargeable(boolean chargeable, String brand) {
+		 super(chargeable, brand, 0);// We have to prevent recursion from constructor chaining!
+	}
+	int powerstate = 100;
+	void Recharge(){
+		powerstate = powerstate + 42;
+		if (powerstate > 100) {
+			powerstate = 100;
+		}
+	}
+}
+class Inchargeable extends CoffeeMachine{
+
+	protected Inchargeable(boolean chargeable, String brand) {
+		super(chargeable, brand, 0);
+	}
+	
+}
