@@ -9,22 +9,29 @@ public class FootballOOP {
 		Team t3 = Team.Create("C");
 		Team t4 = Team.Create("D");
 		Team t5 = Team.Create("E");
-		
+		Team t6 = Team.Create("F");
 		t1.lose(t2);
-		t1.win(t3);
+		t1.lose(t3);
 		t1.win(t4);
-		t1.win(t5);
-		t2.lose(t3);
+		t1.draw(t5);
+		t2.win(t3);
 		t2.win(t4);
-		t2.win(t5);
-		t3.draw(t4);
-		t3.win(t5);
+		t2.lose(t5);
+		t3.win(t4);
+		t3.draw(t5);
 		t4.lose(t5);
+		t5.lose(t6);
+		t6.win(t4);
+		t6.draw(t3);
+		t6.lose(t2);
+		t6.win(t1);
 		LeaderBoard.add(t1);
 		LeaderBoard.add(t2);
 		LeaderBoard.add(t3);
 		LeaderBoard.add(t4);
 		LeaderBoard.add(t5);
+		LeaderBoard.add(t6);
+		
 		System.out.println(LeaderBoard.realrank());
 		
 	}
@@ -34,8 +41,8 @@ class Team{
 	private Team(String s) {
 		name = s;
 		NameCreated.add(s);
+		identifier = Utils.primeNumbers[counter]; // My implementation: Using prime numbers bc the product of two prime numbers is unique
 		counter++;
-		identifier = 6*counter -1; // My implementation: Using prime numbers bc the product of two prime numbers is unique
 	}
 	private static int counter = 0; // Also the number of teams created
 	private int identifier;
@@ -162,15 +169,21 @@ class LeaderBoard {
 		Collections.sort(ar, Utils.c); // After sorting, the same values will stand next to each other!
 		String encrypted = null;
 		int winner;
+		boolean flag = true; // Is that pair has a draw ?
 		for (int i =0; i<list.length-1;i++) {
 			if (ar.get(i).getPoints() == ar.get(i+1).getPoints()) {
 				int cipher = ar.get(i).getIdentifier() * ar.get(i+1).getIdentifier();
 				String inRegex = "." + Integer.toString(cipher); //We are going to find the encrypted code in the WLstatus which has the number cipher
-				for (int j=0; j<Team.getWLstatus().size(); j++) {
+				for (int j=0; j<Team.getWLstatus().size(); j++) { // If the cipher isn't in the list then that pair has a draw
 					if(Team.getWLstatus().get(j).matches(inRegex)) {
 						encrypted = Team.getWLstatus().get(j);
+						flag = false;
 						break;
 					}
+					flag = true;
+				}
+				if(flag) {
+					continue;
 				}
 				winner = Utils.strInterpret(encrypted);
 				if (ar.get(i+1).getIdentifier() == winner) {
@@ -185,6 +198,7 @@ class LeaderBoard {
 }
 class Utils{
 	private Utils() {} // This class is meant to be a collection
+	static final int[] primeNumbers = {2, 3, 5 ,7 ,11, 13, 17 ,19 ,23, 29, 31, 37, 41, 43, 47, 53, 59, 61, 67};
 	static int Combinator(int k, int n) { // k is number of picked elements, n is number of elements
 		if (k == 0 || k == n) {return 1;}
 	    if (k == 1) {return n;}
