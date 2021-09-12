@@ -9,7 +9,6 @@ public class FootballOOP {
 		Team t3 = Team.Create("C");
 		Team t4 = Team.Create("D");
 		Team t5 = Team.Create("E");
-		Team t6 = Team.Create("F");
 		t1.lose(t2);
 		t1.lose(t3);
 		t1.win(t4);
@@ -20,19 +19,12 @@ public class FootballOOP {
 		t3.win(t4);
 		t3.draw(t5);
 		t4.lose(t5);
-		t5.lose(t6);
-		t6.win(t4);
-		t6.draw(t3);
-		t6.lose(t2);
-		t6.win(t1);
 		LeaderBoard.add(t1);
 		LeaderBoard.add(t2);
 		LeaderBoard.add(t3);
 		LeaderBoard.add(t4);
-		LeaderBoard.add(t5);
-		LeaderBoard.add(t6);
-		
-		System.out.println(LeaderBoard.realrank());
+		LeaderBoard.add(t5);	
+		System.out.println(LeaderBoard.rank());
 		
 	}
 
@@ -158,6 +150,7 @@ class LeaderBoard {
 		for(Team t : list) {
 			ar.add(t);
 		}
+		if (Utils.NullInArray(ar)) {System.out.println("Not enough teams were added"); return null;}
 		Collections.sort(ar, Utils.c);
 		return ar;
 	}
@@ -166,6 +159,7 @@ class LeaderBoard {
 		for(Team t : list) {
 			ar.add(t);			
 		}
+		if (Utils.NullInArray(ar)) {System.out.println("Not enough teams were added"); return null;}
 		Collections.sort(ar, Utils.c); // After sorting, the same values will stand next to each other!
 		String encrypted = null;
 		int winner;
@@ -230,5 +224,8 @@ class Utils{
 		case "<": return get.get(0);
 		}
 		return 0; // This is actually unreachable "in term of our usage not the user"
+	}
+	static boolean NullInArray(ArrayList<Team> args) {
+		return (args.get(args.size()-1)==null)?true:false; //We only need to check if the last element in a Team array is null
 	}
 }
