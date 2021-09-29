@@ -1,5 +1,5 @@
 //In the board we have the given numbers 1/80, 2/80, 3/80,...., 80/80. We are allowed to remove any 2 random numbers lets say a,b 
-//and add a new number a+b-2ab to the board. Repeat the process until the board has only 1 number X left. What is the number X ?
+//and then add a new number a+b-2ab to the board. Repeat the process until the board has only 1 number X left. What is the number X ?
 
 import java.util.ArrayList;
 import java.util.Random;
