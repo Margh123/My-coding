@@ -1,0 +1,40 @@
+//Disable all built in escapers (We convence that the user will never input special unicode characters) in IP so that when the method returns s. s is the original string that isn't affected by built in escapers.
+Ex: IP "abcca\tdef" -----> s "abcca\tdef"
+IP "She says \"Hello\" to me" -----> s "She says \"Hello\" to me"
+import java.util.HashMap;
+
+public class Flatform1 {
+    public static void main(String[] args) {
+    	System.out.println(Str.Interpret("She says \"Hello\" to me"));
+    }
+}
+class Str{
+	private Str(){
+		trans.put('\n', 'n');
+		trans.put('\b', 'b');
+		trans.put('\t', 't');
+		trans.put('\f', 'f');
+		trans.put('\r', 'r');
+		trans.put('\"', '"');
+		// Special cases
+		trans.put('\'', '\'');
+		trans.put('\\', '\\');
+	}
+	private HashMap<Character, Character> trans = new HashMap<>();
+	private static Str hash = new Str();
+	static String Interpret(String IP) { // Done requirement 1
+		StringBuilder sb = new StringBuilder();
+		for (int i=0; i<IP.length();i++) {
+			if (hash.trans.containsKey(IP.charAt(i))) {
+				sb.append('\\');
+				sb.append(hash.trans.get(IP.charAt(i)));
+			}
+			else {
+				sb.append(IP.charAt(i));
+			}
+		}
+		return sb.toString();
+	}
+	
+}
+    
