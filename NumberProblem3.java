@@ -1,4 +1,4 @@
-// Find all five-digit numbers (abcde) that satisfy a^e+b^d+c^c+d^b+e^a=abcde
+// Find all five-digit numbers (abcde (overbar)) that satisfy a^e+b^d+c^c+d^b+e^a=abcde(overbar)
 public class Flatform1 {
 	public static void main(String[] args) {
 		String s;
