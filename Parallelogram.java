@@ -26,7 +26,7 @@ public class ParallelogramPattern {
        // Step 3: The bottom
        {
            System.out.print("*".repeat(w));
-           System.out.print(" ".repeat(w));
+           System.out.print(" ".repeat(h-1));
        }
     }
 }
