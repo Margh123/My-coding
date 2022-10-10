@@ -60,10 +60,6 @@ class Pieces {
 		
 	}
 	
-	private static boolean IsOppositeColor(char X, char Y) {
-		return (Character.isUpperCase(X)&&Character.isLowerCase(X))||
-				(Character.isLowerCase(X)&&Character.isUpperCase(X));
-	}
 	static boolean containsEe() {
 		for(String st : ChessBoard.board[2]) {
 			if (st.equals("e")) {
@@ -123,6 +119,13 @@ class Pieces {
 			int startrank = start.charAt(1)-48;
 			int endrank = end.charAt(1)-48;
 			
+			int adj = 0; // adjustment
+			if(startfile == 8) {
+				adj = -2;
+			}
+			if(startfile == 1) {
+				adj = 2;
+			}
 			String placeStart = ChessBoard.board[8-(start.charAt(1)-48)][(int)(start.charAt(0)-97)];
 			
 			String pseudoCaptureSquare; // "E" or "e" or "*"
@@ -134,20 +137,17 @@ class Pieces {
 					//Capture
 					if(startrank-endrank==-1 && Math.abs(startfile-endfile)==1) {
 						char targetPiece = ChessBoard.board[8-endrank][endfile-1].charAt(0); 
-						if(targetPiece == 'e') {
-							ChessBoard.board[8-(start.charAt(1)-46)][(int)(start.charAt(0)-97)] = "*";
-							return true;
-						}
 						return Character.isLowerCase(targetPiece);
 					}
 					// Give an En Passant chance to black
 					if((startfile==endfile && startrank-endrank==-2)&&
-						(ChessBoard.board[8-endrank][(int)(start.charAt(0)-96)].equals("p")||
-						 ChessBoard.board[8-endrank][(int)(start.charAt(0)-98)].equals("p")	)&&
+						(ChessBoard.board[8-endrank][(int)(start.charAt(0)-96)+adj].equals("p")|| // There is a case where no File on the left!! Becareful
+						 ChessBoard.board[8-endrank][(int)(start.charAt(0)-98)+adj].equals("p"))&&
 						(ChessBoard.board[8-(start.charAt(1)-47)][(int)(start.charAt(0)-97)].equals("*")
 						&& ChessBoard.board[8-(start.charAt(1)-46)][(int)(start.charAt(0)-97)].equals("*"))) {
 						pseudoCaptureSquare = "E";
 						ChessBoard.board[8-(start.charAt(1)-47)][(int)(start.charAt(0)-97)] = pseudoCaptureSquare;
+						return true;
 					}
 						//Push
 						return ((startfile==endfile && startrank-endrank==-2)
@@ -159,6 +159,10 @@ class Pieces {
 				if(startrank == 3||startrank == 4||startrank == 5||startrank == 6||startrank == 7) {
 					if(startrank-endrank==-1 && Math.abs(startfile-endfile)==1) {
 						char targetPiece = ChessBoard.board[8-endrank][endfile-1].charAt(0); 
+						if(targetPiece == 'e') {
+							ChessBoard.board[8-(start.charAt(1)-48)][(int)(start.charAt(0)-97-(startfile-endfile))] = "*";
+							return true;
+						}
 						return Character.isLowerCase(targetPiece);
 					}
 					return (startfile==endfile && startrank-endrank==-1)&&
@@ -173,20 +177,17 @@ class Pieces {
 					//Capture
 					if(startrank-endrank==1 && Math.abs(startfile-endfile)==1) {
 						char targetPiece = ChessBoard.board[8-endrank][endfile-1].charAt(0); 
-						if(targetPiece == 'E') {
-							ChessBoard.board[8-(start.charAt(1)-46)][(int)(start.charAt(0)-97)] = "*";
-							return true;
-						}
 						return Character.isUpperCase(targetPiece);
 					}
 					// Give an En Passant chance to White
 					if((startfile==endfile && startrank-endrank==2)&&
-						(ChessBoard.board[8-endrank][(int)(start.charAt(0)-96)].equals("P")||
-						 ChessBoard.board[8-endrank][(int)(start.charAt(0)-98)].equals("P")	)&&
+						(ChessBoard.board[8-endrank][(int)(start.charAt(0)-96)+adj].equals("P")||
+						 ChessBoard.board[8-endrank][(int)(start.charAt(0)-98)+adj].equals("P")	)&&
 						(ChessBoard.board[8-(start.charAt(1)-49)][(int)(start.charAt(0)-97)].equals("*")
 						&& ChessBoard.board[8-(start.charAt(1)-50)][(int)(start.charAt(0)-97)].equals("*"))) {
 						pseudoCaptureSquare = "e";
-						ChessBoard.board[8-(start.charAt(1)-47)][(int)(start.charAt(0)-97)] = pseudoCaptureSquare;
+						ChessBoard.board[8-(start.charAt(1)-49)][(int)(start.charAt(0)-97)] = pseudoCaptureSquare;
+						return true;
 					}
 						//Push
 						return ((startfile==endfile && startrank-endrank==2)
@@ -198,6 +199,10 @@ class Pieces {
 				if(startrank == 6||startrank == 5||startrank == 4||startrank == 3||startrank == 2) {
 					if(startrank-endrank==1 && Math.abs(startfile-endfile)==1) {
 						char targetPiece = ChessBoard.board[8-endrank][endfile-1].charAt(0); 
+						if(targetPiece == 'E') {
+							ChessBoard.board[8-(start.charAt(1)-48)][(int)(start.charAt(0)-97-(startfile-endfile))] = "*";
+							return true;
+						}
 						return Character.isUpperCase(targetPiece);
 					}
 					return (startfile==endfile && startrank-endrank==1)&&

@@ -52,18 +52,24 @@ class ChessBoard {
 				!Pieces.isLegal(move));
 			//valid the move!
 		//If en passant was not made
-		{
+		EnP:{
 			if(Pieces.containsEe()) {
-				// Lost en passant rights
+				// Lost en passant rights by making capture enpassant or else
+				int i = 0;
+				int j = 0;
 				for(String st : ChessBoard.board[2]) {
-					if (st.equals("e")) {
-						st = "*";
+					if (st.equals("e")&& isInteger(moveNum)) {
+						ChessBoard.board[2][i] = "*";
+						break EnP;
 					}
+					i++;
 				}
 				for(String st : ChessBoard.board[5]) {
-					if (st.equals("E")) {
-						st = "*";
+					if (st.equals("E")&& !isInteger(moveNum)) {
+						ChessBoard.board[5][j] = "*";
+						break EnP;
 					}
+					j++;
 				}
 			}		
 		}
