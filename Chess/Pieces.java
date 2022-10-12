@@ -38,7 +38,7 @@ class Pieces {
 			}
 			break;
 		case "R": case "r":
-			if(!Movement.RookMove(move)) {
+			if(!Movement.RookMove(move)||!Blockade.RookBlockade(move)) {
 				return false;
 			}
 			break;
@@ -59,6 +59,7 @@ class Pieces {
 		return true;
 		
 	}
+
 	
 	static boolean containsEe() {
 		for(String st : ChessBoard.board[2]) {
@@ -216,6 +217,60 @@ class Pieces {
 		}
 		
 	}
+		static class Blockade {
+			private Blockade() {}
+				static boolean RookBlockade(String move) {
+					String start = move.substring(0, 2);
+					String end = move.substring(2);
+					
+					int startfile = start.charAt(0)-96;
+					int endfile = end.charAt(0)-96;
+
+					int startrank = start.charAt(1)-48;
+					int endrank = end.charAt(1)-48;
+					// If the files are the same
+					if(startrank<endrank) {
+						for(int i=startrank+1;i<endrank;i++) {
+							if(!(ChessBoard.board[8-i][(int)(start.charAt(0)-97)].equals("*")
+									|| ChessBoard.board[8-i][(int)(start.charAt(0)-97)].equalsIgnoreCase("E"))) {
+								return false;
+							}
+							
+						}
+					}
+					if(startrank>endrank) {
+						for(int i=startrank-1;i>endrank;i--) {
+							if(!(ChessBoard.board[8-i][(int)(start.charAt(0)-97)].equals("*")
+									|| ChessBoard.board[8-i][(int)(start.charAt(0)-97)].equalsIgnoreCase("E"))) {
+								return false;
+							}
+							
+						}
+					}
+					// If the ranks are the same
+					if(startfile<endfile) {
+						for(int i=startfile+1;i<endfile;i++) {
+							if(!(ChessBoard.board[8-startrank][i-1].equals("*")
+									|| ChessBoard.board[8-startrank][i-1].equalsIgnoreCase("E"))) {
+								return false;
+							}
+							
+						}
+					}
+					if(startfile>endfile) {
+						for(int i=startfile-1;i>endfile;i--) {
+							if(!(ChessBoard.board[8-startrank][i-1].equals("*")
+									|| ChessBoard.board[8-startrank][i-1].equalsIgnoreCase("E"))) {
+								return false;
+							}
+							
+						}
+						
+					}
+					return true;
+					
+				}
+		}
 }
 
 
