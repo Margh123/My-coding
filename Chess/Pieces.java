@@ -33,7 +33,7 @@ class Pieces {
 			}
 			break;
 		case "B": case "b":
-			if(!Movement.BishopMove(move)) {
+			if(!Movement.BishopMove(move)||!Blockade.BishopBlockade(move)) {
 				return false;
 			}
 			break;
@@ -266,6 +266,54 @@ class Pieces {
 							
 						}
 						
+					}
+					return true;
+					
+				}
+				static boolean BishopBlockade(String move) {
+					String start = move.substring(0, 2);
+					String end = move.substring(2);
+					
+					int startfile = start.charAt(0)-96;
+					int endfile = end.charAt(0)-96;
+
+					int startrank = start.charAt(1)-48;
+					int endrank = end.charAt(1)-48;
+					// Upright
+					if(startrank < endrank && startfile < endfile) {
+						for(int r = startrank + 1, f = startfile + 1; r<endrank && f<endfile; r++,f++) {
+							if(!(ChessBoard.board[8-r][f-1].equals("*")
+									|| ChessBoard.board[8-r][f-1].equalsIgnoreCase("E"))) {
+								return false;
+							}
+						}
+					}
+					// Upleft
+					if(startrank < endrank && startfile > endfile) {
+						for(int r = startrank + 1, f = startfile - 1; r<endrank && f>endfile; r++,f--) { 
+							if(!(ChessBoard.board[8-r][f-1].equals("*")
+									|| ChessBoard.board[8-r][f-1].equalsIgnoreCase("E"))) {
+								return false;
+							}
+						}
+					}
+					// Downright
+					if(startrank > endrank && startfile < endfile) {
+						for(int r = startrank - 1, f = startfile + 1; r>endrank && f<endfile; r--,f++) {
+							if(!(ChessBoard.board[8-r][f-1].equals("*")
+									|| ChessBoard.board[8-r][f-1].equalsIgnoreCase("E"))) {
+								return false;
+							}
+						}
+					}
+					// DownLeft
+					if(startrank > endrank && startfile > endfile) {
+						for(int r = startrank - 1, f = startfile - 1; r>endrank && f>endfile; r--,f--) {
+							if(!(ChessBoard.board[8-r][f-1].equals("*")
+									|| ChessBoard.board[8-r][f-1].equalsIgnoreCase("E"))) {
+								return false;
+							}
+						}
 					}
 					return true;
 					
