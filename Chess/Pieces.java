@@ -43,8 +43,14 @@ class Pieces {
 			}
 			break;
 		case "Q": case "q":
-			if(!Movement.QueenMove(move)) {
+			if(!Movement.QueenMove(move)) { 
 				return false;
+			}
+			if(Movement.BishopMove(move)) { // If the queen moves like a bishop
+				return Blockade.BishopBlockade(move);
+			}
+			if(Movement.RookMove(move)) { // If the queen moves like a rook
+				return Blockade.RookBlockade(move);
 			}
 			break;
 			// The pawns (hard section)
