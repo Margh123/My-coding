@@ -59,6 +59,12 @@ class Pieces {
 				return false;
 			}
 			break;
+			//The kings (hard section)
+		case "K": case "k":
+			if(!Movement.KingMove(move)) { // or the king is checked (true in the if para) then return false
+				return false;
+			}
+			break;
 		}
 	
 	
@@ -221,6 +227,29 @@ class Pieces {
 			return false;
 			
 		}
+		static boolean KingMove(String move) { // if true then the kings move correctly
+			String start = move.substring(0, 2);
+			String end = move.substring(2);
+			
+			int startfile = start.charAt(0)-96;
+			int endfile = end.charAt(0)-96;
+
+			int startrank = start.charAt(1)-48;
+			int endrank = end.charAt(1)-48;
+			// Moving up or down
+			boolean U = startfile==endfile && endrank == startrank + 1;
+			boolean D = startfile==endfile && endrank == startrank - 1;
+			// Moving left or right
+			boolean L = startrank==endrank && endfile == startfile - 1;
+			boolean R = startrank==endrank && endfile == startfile + 1;
+			// Moving Upleft or downright
+			boolean UL = endfile==startfile - 1 && endrank == startrank + 1;
+			boolean DR = endfile==startfile + 1 && endrank == startrank - 1;
+			// Moving Upright or downleft
+			boolean UR = endfile==startfile + 1 && endrank == startrank + 1;
+			boolean DL = endfile==startfile - 1 && endrank == startrank - 1;
+			return U||D||L||R||UL||DR||UR||DL;
+		}
 		
 	}
 		static class Blockade {
@@ -324,6 +353,9 @@ class Pieces {
 					return true;
 					
 				}
+		}
+		static class Check{ // Deals with checks
+			private Check() {}
 		}
 }
 
